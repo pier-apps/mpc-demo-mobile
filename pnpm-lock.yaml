@@ -8,6 +8,9 @@ dependencies:
   '@bacons/link-assets':
     specifier: ^1.1.0
     version: 1.1.0
+  '@ethersproject/shims':
+    specifier: ^5.7.0
+    version: 5.7.0
   '@gorhom/bottom-sheet':
     specifier: ^4
     version: 4.4.5(react-native-gesture-handler@2.12.0)(react-native-reanimated@3.3.0)(react-native@0.72.5)(react@18.2.0)
@@ -15,8 +18,8 @@ dependencies:
     specifier: ^2.9.11
     version: 2.9.11(react-hook-form@7.43.5)
   '@pier-wallet/mpc-lib':
-    specifier: 0.0.14-webview.11
-    version: 0.0.14-webview.11(typescript@5.1.6)
+    specifier: 0.0.14-webview.15
+    version: 0.0.14-webview.15(typescript@5.1.6)
   '@react-navigation/bottom-tabs':
     specifier: ^6.5.7
     version: 6.5.7(@react-navigation/native@6.1.6)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.5)(react@18.2.0)
@@ -2331,6 +2334,10 @@ packages:
       hash.js: 1.1.7
     dev: false
 
+  /@ethersproject/shims@5.7.0:
+    resolution: {integrity: sha512-WeDptc6oAprov5CCN2LJ/6/+dC9gTonnkdAtLepm/7P5Z+3PRxS5NpfVWmOMs1yE4Vitl2cU8bOPWC0GvGSbVg==}
+    dev: false
+
   /@ethersproject/signing-key@5.7.0:
     resolution: {integrity: sha512-MZdy2nL3wO0u7gkB4nA/pEf8lu1TlFswPNmy8AiYkfKTdO6eXBJyUdmHO/ehm/htHw9K/qF8ujnTyUAD+Ry54Q==}
     dependencies:
@@ -3538,21 +3545,21 @@ packages:
       rimraf: 3.0.2
     dev: false
 
-  /@pier-wallet/mpc-client@1.1.11:
-    resolution: {integrity: sha512-EL28azRtHe5nwoTsXB+UuTcNf+OrqFPkRUTpLoPZP8xjbqQyC8pa4mleczrCS5oRvEaxFWMAxMeyA1RMieMRYA==}
+  /@pier-wallet/mpc-client@1.1.12:
+    resolution: {integrity: sha512-cCV1OZQj9nPhDC36OznCVl9atpVB+VOysBALtnn/3E9QKkhsw97XkXFa8AiwaxIHTSISVtjNZk1YWr8ZWR3i1Q==}
     dependencies:
-      '@pier-wallet/mpc-ecdsa-wasm': 0.1.1
+      '@pier-wallet/mpc-ecdsa-wasm': 0.1.2
       events: 3.3.0
     dev: false
 
-  /@pier-wallet/mpc-ecdsa-wasm@0.1.1:
-    resolution: {integrity: sha512-E9ntyxdCVEb7B75k60uThrgBZ1Kb+TMC0d5lIGURs1lnX0zPcauHuxkCzUa9NWO/7WaV8clsXgSYT6z53lkDGQ==}
+  /@pier-wallet/mpc-ecdsa-wasm@0.1.2:
+    resolution: {integrity: sha512-Tn3qXyqGHjat89rFZSfgnvwaYT/IIXa571MFdKfn8+Ux18ogSv/RTpVX2ApICH8QvrhXLzvAsqaIS1FFDyHAsg==}
     dev: false
 
-  /@pier-wallet/mpc-lib@0.0.14-webview.11(typescript@5.1.6):
-    resolution: {integrity: sha512-16OnHt4AsZIZszUi4huexkOr9qfvEA8z2JnWcwWQqs4i5SYijABlrO4wApITgUrLNyAAl2wbTCYOcz96c+TLoA==}
+  /@pier-wallet/mpc-lib@0.0.14-webview.15(typescript@5.1.6):
+    resolution: {integrity: sha512-waNxSwueO+eLK2b35gSKUOob95DzsD5nes0h0pzrS+X52HKJbDOk6XxVDoAd/OfQOsK0ZEp3YNTAX+RQlsU4dw==}
     dependencies:
-      '@pier-wallet/mpc-client': 1.1.11
+      '@pier-wallet/mpc-client': 1.1.12
       ethers: 5.7.2
       ts-essentials: 9.4.0(typescript@5.1.6)
       zod: 3.22.4

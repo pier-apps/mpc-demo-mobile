@@ -1,9 +1,10 @@
-import type { PierMpcWallet } from '@pier-wallet/mpc-lib';
-import { SessionKind } from '@pier-wallet/mpc-lib';
+import '@ethersproject/shims';
+
+import { type PierMpcWallet, SessionKind } from '@pier-wallet/mpc-lib';
 import {
   PierMpcSdkReactNativeProvider,
   usePierMpcSdk,
-} from '@pier-wallet/mpc-lib/react-native';
+} from '@pier-wallet/mpc-lib/dist/react-native';
 import React, { useState } from 'react';
 
 import { Button, Text } from '@/ui';
@@ -71,8 +72,8 @@ const MpcInner = () => {
           const message = 'hello world';
           api
             .signMessage({
-              groupId: wallet.groupSessionIds.groupId,
-              sessionId: wallet.groupSessionIds.sessionId,
+              groupId: wallet.connection.groupId,
+              sessionId: wallet.connection.sessionId,
               signerAddress: wallet.address,
               message,
             })

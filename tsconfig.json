@@ -7,8 +7,6 @@
       "@/*": ["./src/*"],
       "@env": ["./src/core/env.js"]
     },
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
     "esModuleInterop": true,
     "checkJs": true
   },
