@@ -16,7 +16,6 @@ export const Mpc = () => {
   );
 };
 
-// eslint-disable-next-line max-lines-per-function
 const MpcInner = () => {
   const pierMpcSdk = usePierMpcSdk();
 
@@ -29,30 +28,29 @@ const MpcInner = () => {
       <Button
         label="Generate key share"
         onPress={async () => {
-          const { groupId, sessionId } = await api.createGroup({
+          const { sessionId } = await api.createSession({
             sessionKind: SessionKind.KEYGEN,
           });
           const groupSessionIds = await pierMpcSdk.establishConnection(
             SessionKind.KEYGEN,
             {
               type: 'join',
-              groupId,
               sessionId,
             }
           );
-          api.generateKeyShare({ groupId, sessionId }).then(() => {
+          api.generateKeyShare({ sessionId }).then(() => {
             console.log('generated key share on server');
           });
           const keyShare = await pierMpcSdk.generateKeyShare(groupSessionIds);
 
-          const signGroupSessionInfoCreated = await api.createGroup({
+          const signSessionInfo = await api.createSession({
             sessionKind: SessionKind.SIGN,
           });
           const signGroupSessionInfo = await pierMpcSdk.establishConnection(
             SessionKind.SIGN,
             {
               type: 'join',
-              ...signGroupSessionInfoCreated,
+              ...signSessionInfo,
             }
           );
           setWallet(
@@ -72,7 +70,6 @@ const MpcInner = () => {
           const message = 'hello world';
           api
             .signMessage({
-              groupId: wallet.connection.groupId,
               sessionId: wallet.connection.sessionId,
               signerAddress: wallet.address,
               message,
@@ -89,35 +86,31 @@ const MpcInner = () => {
   );
 };
 
-type GroupSessionInfo = {
-  groupId: string;
+type SessionInfo = {
   sessionId: string;
 };
 
 class Api {
   constructor(private readonly apiUrl: string) {}
 
-  async createGroup({
+  async createSession({
     sessionKind,
   }: {
     sessionKind: SessionKind;
-  }): Promise<GroupSessionInfo> {
-    const { groupId, sessionId } = await fetch(
-      `${this.apiUrl}/createGroupAndSession`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          sessionKind,
-        }),
-      }
-    ).then((res) => res.json());
-    return { groupId, sessionId };
+  }): Promise<SessionInfo> {
+    const { sessionId } = await fetch(`${this.apiUrl}/createSession`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sessionKind,
+      }),
+    }).then((res) => res.json());
+    return { sessionId };
   }
 
-  async generateKeyShare(data: GroupSessionInfo) {
+  async generateKeyShare(data: SessionInfo) {
     await fetch(`${this.apiUrl}/generateKeyShare`, {
       method: 'POST',
       headers: {
@@ -131,7 +124,7 @@ class Api {
     data: {
       signerAddress: string;
       message: string;
-    } & GroupSessionInfo
+    } & SessionInfo
   ) {
     await fetch(`${this.apiUrl}/signMessage`, {
       method: 'POST',

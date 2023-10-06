@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.9.11
     version: 2.9.11(react-hook-form@7.43.5)
   '@pier-wallet/mpc-lib':
-    specifier: 0.0.14-webview.16
-    version: 0.0.14-webview.16(typescript@5.1.6)
+    specifier: 0.0.14-newWsServer.0
+    version: 0.0.14-newWsServer.0(typescript@5.1.6)
   '@react-navigation/bottom-tabs':
     specifier: ^6.5.7
     version: 6.5.7(@react-navigation/native@6.1.6)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.5)(react@18.2.0)
@@ -3545,8 +3545,8 @@ packages:
       rimraf: 3.0.2
     dev: false
 
-  /@pier-wallet/mpc-client@1.1.14:
-    resolution: {integrity: sha512-K8IFk+F9MzccNo2VRdvZygVRl5YB2qha8/HID9miuj0ZfVsn/+uIp/8Gurh87BLmK8dRv7GzCJDOgu7wblXUYQ==}
+  /@pier-wallet/mpc-client@1.1.15-newWsServer.0:
+    resolution: {integrity: sha512-bvNQUV2yjGq3WpeMi7Kj17rqaTsbroiw5Xk28/yplYUpBp0y9EQKlN0yKIdgVHFjDy8GTHiUdtqzS/LBA/vcbA==}
     dependencies:
       '@pier-wallet/mpc-ecdsa-wasm': 0.1.3
       events: 3.3.0
@@ -3556,10 +3556,10 @@ packages:
     resolution: {integrity: sha512-rD/XRGVMEaZbIcolYEQrr/nrrUwrCRmYignaaFowziTFL1GWBHAwBnpE86HFmX/Xn+BirF3YWMW1EoY3RCIUbg==}
     dev: false
 
-  /@pier-wallet/mpc-lib@0.0.14-webview.16(typescript@5.1.6):
-    resolution: {integrity: sha512-isCEYp3FIx8b8OtvL5o1nd50PcvnPTPW8vnQHNe9LhYDJd0ZEgNfsmZYr+Ls8fYfs3KMVQR82unpLkyfTt/MRw==}
+  /@pier-wallet/mpc-lib@0.0.14-newWsServer.0(typescript@5.1.6):
+    resolution: {integrity: sha512-x8OVUfsfeOv/KBmhTR6qeEuu2CTihZOmUX66deKsQ0wHhMi+TCxnt0BobHEBvNq0/rVNWI5NppqtY0YdZIJRhQ==}
     dependencies:
-      '@pier-wallet/mpc-client': 1.1.14
+      '@pier-wallet/mpc-client': 1.1.15-newWsServer.0
       ethers: 5.7.2
       ts-essentials: 9.4.0(typescript@5.1.6)
       zod: 3.22.4
