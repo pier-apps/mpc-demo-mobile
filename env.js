@@ -34,7 +34,7 @@ require('dotenv').config({
 const BUNDLE_ID = 'com.piermpcdemo'; // ios bundle id
 const PACKAGE = 'com.piermpcdemo'; // android package name
 const NAME = 'piermpcdemo'; // app name
-const EXPO_ACCOUNT_OWNER = 'expo-owner'; // expo account owner
+const EXPO_ACCOUNT_OWNER = 'andrashejj'; // expo account owner
 
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
