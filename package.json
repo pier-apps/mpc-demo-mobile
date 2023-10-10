@@ -79,7 +79,7 @@
     "react-native-web": "~0.19.7",
     "react-native-webview": "^13.6.0",
     "react-query-kit": "^1.4.6",
-    "zod": "^3.21.4",
+    "zod": "^3.22.3",
     "zustand": "^4.3.6"
   },
   "devDependencies": {
