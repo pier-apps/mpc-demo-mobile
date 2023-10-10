@@ -9,10 +9,9 @@ import React, { useState } from 'react';
 
 import { Button, Text } from '@/ui';
 
-const PIER_MPC_SERVER_URL = 'https://mpc-server-7ca971e09088.herokuapp.com';
 export const Mpc = () => {
   return (
-    <PierMpcSdkReactNativeProvider websocketUrl={PIER_MPC_SERVER_URL}>
+    <PierMpcSdkReactNativeProvider>
       <MpcInner />
     </PierMpcSdkReactNativeProvider>
   );
@@ -138,4 +137,5 @@ class Api {
   }
 }
 
+const PIER_MPC_SERVER_URL = 'https://mpc-server-7ca971e09088.herokuapp.com';
 const api = new Api(PIER_MPC_SERVER_URL);
