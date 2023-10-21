@@ -11358,8 +11358,8 @@ packages:
       minimist: 1.2.7
       strip-json-comments: 2.0.1
 
-  /react-devtools-core@4.27.2:
-    resolution: {integrity: sha512-8SzmIkpO87alD7Xr6gWIEa1jHkMjawOZ+6egjazlnjB4UUcbnzGDf/vBJ4BzGuWWEM+pzrxuzsPpcMqlQkYK2g==}
+  /react-devtools-core@4.28.4:
+    resolution: {integrity: sha512-IUZKLv3CimeM07G3vX4H4loxVpByrzq3HvfTX7v9migalwvLs9ZY5D3S3pKR33U+GguYfBBdMMZyToFhsSE/iQ==}
     dependencies:
       shell-quote: 1.7.4
       ws: 7.5.9
@@ -11629,7 +11629,7 @@ packages:
       pretty-format: 26.6.2
       promise: 8.3.0
       react: 18.2.0
-      react-devtools-core: 4.27.2
+      react-devtools-core: 4.28.4
       react-refresh: 0.4.3
       react-shallow-renderer: 16.15.0(react@18.2.0)
       regenerator-runtime: 0.13.11
