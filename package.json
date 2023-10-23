@@ -41,7 +41,7 @@
     "@ethersproject/shims": "^5.7.0",
     "@gorhom/bottom-sheet": "^4",
     "@hookform/resolvers": "^2.9.11",
-    "@pier-wallet/mpc-lib": "0.0.14-newWsServer.3",
+    "@pier-wallet/mpc-lib": "0.0.14-newWsServer.7",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
@@ -80,7 +80,7 @@
     "react-native-web": "~0.19.7",
     "react-native-webview": "^13.6.0",
     "react-query-kit": "^1.4.6",
-    "zod": "^3.21.4",
+    "zod": "^3.22.3",
     "zustand": "^4.3.6"
   },
   "devDependencies": {
