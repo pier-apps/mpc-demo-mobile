@@ -2,9 +2,9 @@
 import '@ethersproject/shims';
 
 import { SessionKind } from '@pier-wallet/mpc-lib';
-import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/bitcoin';
-import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/ethers-v5';
-import { createPierMpcSdkWasm } from '@pier-wallet/mpc-lib/wasm';
+import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
+import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
+import { createPierMpcSdkWasm } from '@pier-wallet/mpc-lib/dist/package/wasm';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
@@ -81,7 +81,7 @@ export const Mpc = () => {
     const message = 'hello world';
     api.signMessage
       .mutate({
-        signerAddress: ethWallet.address,
+        publicKey: ethWallet.keyShare.publicKey,
         message,
         sessionId: ethWallet.connection.sessionId,
       })
@@ -114,7 +114,7 @@ export const Mpc = () => {
     api.bitcoin.sendTransaction
       .mutate({
         sessionId: btcWallet.connection.sessionId,
-        signerAddress: ethWallet!.address,
+        publicKey: btcWallet.keyShare.publicKey,
         transaction: tx.toObject(),
       })
       .then((res: unknown) =>
