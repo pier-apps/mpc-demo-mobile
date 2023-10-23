@@ -1,141 +1,155 @@
+/* eslint-disable max-lines-per-function */
 import '@ethersproject/shims';
 
-import { type PierMpcWallet, SessionKind } from '@pier-wallet/mpc-lib';
-import {
-  PierMpcSdkReactNativeProvider,
-  usePierMpcSdk,
-} from '@pier-wallet/mpc-lib/dist/react-native';
+import { SessionKind } from '@pier-wallet/mpc-lib';
+import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/bitcoin';
+import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/ethers-v5';
+import { createPierMpcSdkWasm } from '@pier-wallet/mpc-lib/wasm';
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
-import { Button, Text } from '@/ui';
+import { api } from '@/api/common/trpc';
+
+const supabaseTestUser = {
+  id: '11062eb7-60ad-493c-84b6-116bdda7a7c3',
+  email: 'mpc-lib-test@example.com',
+  password: '123456',
+};
+const pierMpcSdk = createPierMpcSdkWasm({
+  credentials: supabaseTestUser,
+});
 
 export const Mpc = () => {
-  return (
-    <PierMpcSdkReactNativeProvider>
-      <MpcInner />
-    </PierMpcSdkReactNativeProvider>
+  const [ethWallet, setEthWallet] = useState<PierMpcEthereumWallet | null>(
+    null
   );
-};
+  const [ethSignature, setEthSignature] = useState<string | null>(null);
 
-const MpcInner = () => {
-  const pierMpcSdk = usePierMpcSdk();
+  const [btcWallet, setBtcWallet] = useState<PierMpcBitcoinWallet | null>(null);
+  const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
 
-  const [wallet, setWallet] = useState<PierMpcWallet | null>(null);
-  const [signature, setSignature] = useState<any>(null);
+  async function establishConnection<T extends SessionKind>(sessionKind: T) {
+    const { sessionId } = await api.createSession.mutate({
+      sessionKind,
+    });
+    const transport = await pierMpcSdk.establishConnection(sessionKind, {
+      type: 'join',
+      sessionId,
+    });
+    return transport;
+  }
+
+  const generateKeyShare = async () => {
+    const connection = await establishConnection(SessionKind.KEYGEN);
+    api.generateKeyShare
+      .mutate({
+        sessionId: connection.sessionId,
+      })
+      .then((res: unknown) =>
+        console.log(
+          `server finished generating key share: "${JSON.stringify(res)}"`
+        )
+      );
+    const keyShare = await pierMpcSdk.generateKeyShare(connection);
+    const signConnection = await establishConnection(SessionKind.SIGN);
+    const ethWallet = new PierMpcEthereumWallet(
+      keyShare,
+      signConnection,
+      pierMpcSdk
+    );
+    const btcWallet = new PierMpcBitcoinWallet(
+      keyShare,
+      'testnet',
+      signConnection,
+      pierMpcSdk
+    );
+    console.log(
+      'local key share generated.',
+      ethWallet.address,
+      btcWallet.address.toString()
+    );
+    setEthWallet(ethWallet);
+    setBtcWallet(btcWallet);
+  };
+
+  const signMessageWithEth = async () => {
+    if (!ethWallet) {
+      console.error('wallet not generated');
+      return;
+    }
+
+    const message = 'hello world';
+    api.signMessage
+      .mutate({
+        signerAddress: ethWallet.address,
+        message,
+        sessionId: ethWallet.connection.sessionId,
+      })
+      .then(() => console.log('server finished signing message'));
+    const signature = await ethWallet.signMessage(message);
+    console.log(`local signature generated: ${signature}`);
+    const recoveredAddress = ethers.utils.verifyMessage(message, signature);
+    console.log(
+      'signature verification:',
+      message,
+      recoveredAddress,
+      ethWallet.address,
+      recoveredAddress.toLowerCase() === ethWallet.address.toLowerCase()
+    );
+    setEthSignature(signature);
+  };
+
+  const sendBitcoinTransaction = async () => {
+    const faucetAddress = 'tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6';
+
+    if (!btcWallet) {
+      console.error('wallet not generated');
+      return;
+    }
+    const tx = await btcWallet.createTransaction({
+      to: faucetAddress,
+      value: 800n,
+      feePerByte: 1n,
+    });
+    api.bitcoin.sendTransaction
+      .mutate({
+        sessionId: btcWallet.connection.sessionId,
+        signerAddress: ethWallet!.address,
+        transaction: tx.toObject(),
+      })
+      .then((res: unknown) =>
+        console.log(
+          `server finished sending transaction: "${JSON.stringify(res)}"`
+        )
+      );
+    const hash = await btcWallet.sendTransaction(tx);
+    setBtcTxHash(hash);
+    console.log('btc hash', hash);
+  };
 
   return (
     <>
-      {wallet && <Text> Key share: {wallet.address}</Text>}
-      <Button
-        label="Generate key share"
-        onPress={async () => {
-          const { sessionId } = await api.createSession({
-            sessionKind: SessionKind.KEYGEN,
-          });
-          const groupSessionIds = await pierMpcSdk.establishConnection(
-            SessionKind.KEYGEN,
-            {
-              type: 'join',
-              sessionId,
-            }
-          );
-          api.generateKeyShare({ sessionId }).then(() => {
-            console.log('generated key share on server');
-          });
-          const keyShare = await pierMpcSdk.generateKeyShare(groupSessionIds);
+      <h1>Pier Wallet MPC Demo</h1>
+      <h2>Step 1: Create connection & Join Session</h2>
+      {
+        <p>
+          Wallet addresses
+          <br />
+          ETH: {ethWallet?.address}
+          <br />
+          BTC: {btcWallet?.address.toString()}
+        </p>
+      }
+      <button onClick={generateKeyShare}>Create wallet</button>
+      <p>
+        <button onClick={signMessageWithEth}>Sign message</button>
+        ETH Signature: {ethSignature}
+      </p>
 
-          const signSessionInfo = await api.createSession({
-            sessionKind: SessionKind.SIGN,
-          });
-          const signGroupSessionInfo = await pierMpcSdk.establishConnection(
-            SessionKind.SIGN,
-            {
-              type: 'join',
-              ...signSessionInfo,
-            }
-          );
-          setWallet(
-            pierMpcSdk.walletFromKeyShare(keyShare, signGroupSessionInfo)
-          );
-          console.log('got key share', keyShare.address);
-        }}
-      />
-      {signature && <Text>Signature: {signature}</Text>}
-      <Button
-        label="Sign message"
-        disabled={!wallet}
-        onPress={async () => {
-          if (!wallet) {
-            return;
-          }
-          const message = 'hello world';
-          api
-            .signMessage({
-              sessionId: wallet.connection.sessionId,
-              signerAddress: wallet.address,
-              message,
-            })
-            .then(() => {
-              console.log('signed message on server');
-            });
-          const signature = await wallet.signMessage(message);
-          console.log('got signature', signature);
-          setSignature(signature);
-        }}
-      />
+      <p>
+        <button onClick={sendBitcoinTransaction}>Send BTC to faucet</button>
+        BTC tx hash: {btcTxHash}
+      </p>
     </>
   );
 };
-
-type SessionInfo = {
-  sessionId: string;
-};
-
-class Api {
-  constructor(private readonly apiUrl: string) {}
-
-  async createSession({
-    sessionKind,
-  }: {
-    sessionKind: SessionKind;
-  }): Promise<SessionInfo> {
-    const { sessionId } = await fetch(`${this.apiUrl}/createSession`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sessionKind,
-      }),
-    }).then((res) => res.json());
-    return { sessionId };
-  }
-
-  async generateKeyShare(data: SessionInfo) {
-    await fetch(`${this.apiUrl}/generateKeyShare`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-  }
-
-  async signMessage(
-    data: {
-      signerAddress: string;
-      message: string;
-    } & SessionInfo
-  ) {
-    await fetch(`${this.apiUrl}/signMessage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-  }
-}
-
-const PIER_MPC_SERVER_URL = 'https://mpc-server-7ca971e09088.herokuapp.com';
-const api = new Api(PIER_MPC_SERVER_URL);
