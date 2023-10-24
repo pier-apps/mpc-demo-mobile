@@ -11,6 +11,11 @@ import {
   usePierMpcSdk,
 } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
+// import * as bitcoinJS from 'bitcoinjs-lib';
+// console.log(
+//   '🚀 ~ file: mpc.tsx:16 ~ bitcoin:',
+//   bitcoinJS.crypto.hash256(Buffer.from([1, 2, 3]))
+// );
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/ui';
@@ -42,6 +47,12 @@ const MpcInner = () => {
     supabase.auth.signInWithPassword(supabaseTestUser);
   }, []);
 
+  // useEffect(() => {
+  //   const keyPair = ECPair.makeRandom();
+  //   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+  //   console.log('address', address);
+  // }, []);
+
   const wallets = useQuery({
     queryKey: ['keyShare', keyShare?.publicKey],
     queryFn: async () => {
@@ -60,7 +71,9 @@ const MpcInner = () => {
       //   signConnection,
       //   pierMpcSdk
       // );
-      return { ethWallet, btcWallet: null as any };
+      const btcWallet = null as any;
+
+      return { ethWallet, btcWallet };
     },
   }).data;
   const { btcWallet, ethWallet } = wallets || {
