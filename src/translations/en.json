@@ -29,5 +29,8 @@
     "version": "Version",
     "website": "Website"
   },
+  "mpc": {
+    "title": "MPC Demo"
+  },
   "welcome": "Welcome to obytes app site"
 }

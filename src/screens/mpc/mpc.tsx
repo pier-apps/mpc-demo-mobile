@@ -18,7 +18,8 @@ import { useQuery } from '@tanstack/react-query';
 // );
 import React, { useEffect, useState } from 'react';
 
-import { Button } from '@/ui';
+import { translate } from '@/core';
+import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
 import { api, supabase } from './trpc';
 
@@ -156,7 +157,17 @@ const MpcInner = () => {
   };
   return (
     <>
-      <Button label="Generate key share" onPress={generateKeyShare} />
+      <FocusAwareStatusBar />
+      <ScrollView>
+        <View className="flex-1 px-4 pt-16 ">
+          <Text variant="lg" className="font-bold">
+            {translate('mpc.title')}
+          </Text>
+
+          <Button label="Generate key share" onPress={generateKeyShare} />
+          {<Text>ETH Address: {ethWallet?.address}</Text>}
+        </View>
+      </ScrollView>
     </>
   );
 };
