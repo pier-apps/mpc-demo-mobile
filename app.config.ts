@@ -8,7 +8,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: Env.NAME,
   description: `${Env.NAME} Mobile App`,
   owner: Env.EXPO_ACCOUNT_OWNER,
-  slug: 'obytesapp',
+  slug: 'piermpcdemo',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
   icon: './assets/icon.png',

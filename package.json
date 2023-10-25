@@ -1,6 +1,6 @@
 {
   "name": "piermpcdemo",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "cross-env EXPO_NO_DOTENV=1 expo start",
@@ -67,6 +67,7 @@
     "expo-splash-screen": "0.20.5",
     "expo-status-bar": "~1.6.0",
     "expo-system-ui": "~2.4.0",
+    "expo-updates": "~0.18.16",
     "i18next": "^22.4.11",
     "lodash.memoize": "^4.1.2",
     "nativewind": "^2.0.10",
