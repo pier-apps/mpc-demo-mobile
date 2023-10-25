@@ -1,18 +1,21 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useAuth } from '@/core';
 import { useIsFirstTime } from '@/core/hooks';
 import { Onboarding } from '@/screens';
-import { Mpc } from '@/screens/mpc/mpc';
+import { supabase } from '@/screens/mpc/trpc';
 
+import { AuthNavigator } from './auth-navigator';
 import { NavigationContainer } from './navigation-container';
 import { TabNavigator } from './tab-navigator';
 const Stack = createNativeStackNavigator();
 
 export const Root = () => {
   const status = useAuth.use.status();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [isFirstTime] = useIsFirstTime();
   const hideSplash = React.useCallback(async () => {
     await SplashScreen.hideAsync();
@@ -22,6 +25,20 @@ export const Root = () => {
       hideSplash();
     }
   }, [hideSplash, status]);
+
+  useEffect(() => {
+    const subscription = supabase.auth.onAuthStateChange((authChangeEvent) => {
+      if (authChangeEvent === 'SIGNED_IN') {
+        setIsLoggedIn(true);
+      }
+      if (authChangeEvent === 'SIGNED_OUT') {
+        setIsLoggedIn(false);
+      }
+    });
+    return () => {
+      subscription.data.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <Stack.Navigator
@@ -35,11 +52,10 @@ export const Root = () => {
         <Stack.Screen name="Onboarding" component={Onboarding} />
       ) : (
         <Stack.Group>
-          {status === 'signOut' ? (
-            // <Stack.Screen name="Auth" component={AuthNavigator} />
-            <Stack.Screen name="Mpc" component={Mpc} />
-          ) : (
+          {isLoggedIn ? (
             <Stack.Screen name="App" component={TabNavigator} />
+          ) : (
+            <Stack.Screen name="Auth" component={AuthNavigator} />
           )}
         </Stack.Group>
       )}

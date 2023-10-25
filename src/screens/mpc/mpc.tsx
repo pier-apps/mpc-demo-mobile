@@ -16,12 +16,12 @@ import { useQuery } from '@tanstack/react-query';
 //   '🚀 ~ file: mpc.tsx:16 ~ bitcoin:',
 //   bitcoinJS.crypto.hash256(Buffer.from([1, 2, 3]))
 // );
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { translate } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
-import { api, supabase } from './trpc';
+import { api } from './trpc';
 
 const supabaseTestUser = {
   id: '11062eb7-60ad-493c-84b6-116bdda7a7c3',
@@ -40,13 +40,16 @@ const MpcInner = () => {
   const pierMpcSdk = usePierMpcSdk();
 
   const [keyShare, setKeyShare] = useState<KeyShare | null>(null);
+  const [keyShareSatus, setKeyShareStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
 
   const [ethSignature, setEthSignature] = useState<string | null>(null);
   const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
 
-  useEffect(() => {
-    supabase.auth.signInWithPassword(supabaseTestUser);
-  }, []);
+  // useEffect(() => {
+  //   supabase.auth.signInWithPassword(supabaseTestUser);
+  // }, []);
 
   // useEffect(() => {
   //   const keyPair = ECPair.makeRandom();
@@ -94,19 +97,26 @@ const MpcInner = () => {
   }
 
   const generateKeyShare = async () => {
-    const connection = await establishConnection(SessionKind.KEYGEN);
-    api.generateKeyShare
-      .mutate({
-        sessionId: connection.sessionId,
-      })
-      .then((res: unknown) =>
-        console.log(
-          `server finished generating key share: "${JSON.stringify(res)}"`
-        )
-      );
-    const keyShare = await pierMpcSdk.generateKeyShare(connection);
-    console.log('local key share generated.', keyShare.publicKey);
-    setKeyShare(keyShare);
+    setKeyShareStatus('loading');
+    try {
+      const connection = await establishConnection(SessionKind.KEYGEN);
+      api.generateKeyShare
+        .mutate({
+          sessionId: connection.sessionId,
+        })
+        .then((res: unknown) =>
+          console.log(
+            `server finished generating key share: "${JSON.stringify(res)}"`
+          )
+        );
+      const keyShare = await pierMpcSdk.generateKeyShare(connection);
+      console.log('local key share generated.', keyShare.publicKey);
+      setKeyShare(keyShare);
+      setKeyShareStatus('success');
+    } catch (e) {
+      console.error(e);
+      setKeyShareStatus('error');
+    }
   };
 
   const signMessageWithEth = async () => {
@@ -164,7 +174,14 @@ const MpcInner = () => {
             {translate('mpc.title')}
           </Text>
 
-          <Button label="Generate key share" onPress={generateKeyShare} />
+          <Button
+            label="Generate key share"
+            onPress={generateKeyShare}
+            loading={keyShareSatus === 'loading'}
+            disabled={
+              keyShareSatus === 'loading' || keyShareSatus === 'success'
+            }
+          />
           {<Text>ETH Address: {ethWallet?.address}</Text>}
         </View>
       </ScrollView>

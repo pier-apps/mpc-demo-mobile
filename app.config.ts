@@ -40,6 +40,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     ['@bacons/link-assets', ['./assets/fonts/Inter.ttf']],
     'expo-localization',
+    'expo-apple-authentication',
+    [
+      'expo-local-authentication',
+      {
+        faceIDPermission: 'Allow piermpcdemo to use Face ID.',
+      },
+    ],
     [
       'expo-build-properties',
       {
