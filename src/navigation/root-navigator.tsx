@@ -27,6 +27,16 @@ export const Root = () => {
   }, [hideSplash, status]);
 
   useEffect(() => {
+    (async () => {
+      const session = await supabase.auth.getSession();
+
+      if (session.data.session) {
+        setIsLoggedIn(true);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     const subscription = supabase.auth.onAuthStateChange((authChangeEvent) => {
       if (authChangeEvent === 'SIGNED_IN') {
         setIsLoggedIn(true);

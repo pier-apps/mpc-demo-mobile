@@ -2,35 +2,24 @@
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
 
-import type { KeyShare } from '@pier-wallet/mpc-lib';
 import { SessionKind } from '@pier-wallet/mpc-lib';
-// import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
 import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
 import {
   PierMpcSdkReactNativeProvider,
   usePierMpcSdk,
 } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
-// import * as bitcoinJS from 'bitcoinjs-lib';
-// console.log(
-//   '🚀 ~ file: mpc.tsx:16 ~ bitcoin:',
-//   bitcoinJS.crypto.hash256(Buffer.from([1, 2, 3]))
-// );
 import React, { useState } from 'react';
 
 import { translate } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
-import { api } from './trpc';
+import { api, supabase } from './trpc';
+import { useKeyStorage } from './use-key-storage';
 
-const supabaseTestUser = {
-  id: '11062eb7-60ad-493c-84b6-116bdda7a7c3',
-  email: 'mpc-lib-test@example.com',
-  password: '123456',
-};
 export const Mpc = () => {
   return (
-    <PierMpcSdkReactNativeProvider credentials={supabaseTestUser}>
+    <PierMpcSdkReactNativeProvider supabase={supabase}>
       <MpcInner />
     </PierMpcSdkReactNativeProvider>
   );
@@ -38,24 +27,15 @@ export const Mpc = () => {
 
 const MpcInner = () => {
   const pierMpcSdk = usePierMpcSdk();
-
-  const [keyShare, setKeyShare] = useState<KeyShare | null>(null);
+  const { keyShare, saveKeyShare } = useKeyStorage();
   const [keyShareSatus, setKeyShareStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
   >('idle');
-
+  const [ethSignatureStatus, setEthSignatureStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
   const [ethSignature, setEthSignature] = useState<string | null>(null);
   const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   supabase.auth.signInWithPassword(supabaseTestUser);
-  // }, []);
-
-  // useEffect(() => {
-  //   const keyPair = ECPair.makeRandom();
-  //   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-  //   console.log('address', address);
-  // }, []);
 
   const wallets = useQuery({
     queryKey: ['keyShare', keyShare?.publicKey],
@@ -109,9 +89,9 @@ const MpcInner = () => {
             `server finished generating key share: "${JSON.stringify(res)}"`
           )
         );
-      const keyShare = await pierMpcSdk.generateKeyShare(connection);
-      console.log('local key share generated.', keyShare.publicKey);
-      setKeyShare(keyShare);
+      const tempKeyShare = await pierMpcSdk.generateKeyShare(connection);
+      console.log('local key share generated.', tempKeyShare.publicKey);
+      saveKeyShare(tempKeyShare);
       setKeyShareStatus('success');
     } catch (e) {
       console.error(e);
@@ -124,7 +104,7 @@ const MpcInner = () => {
       console.error('wallet not generated');
       return;
     }
-
+    setEthSignatureStatus('loading');
     const message = 'hello world';
     api.signMessage
       .mutate({
@@ -136,6 +116,7 @@ const MpcInner = () => {
     const signature = await ethWallet.signMessage(message);
     console.log(`local signature generated: ${signature}`);
     setEthSignature(signature);
+    setEthSignatureStatus('success');
   };
 
   const sendBitcoinTransaction = async () => {
@@ -183,6 +164,27 @@ const MpcInner = () => {
             }
           />
           {<Text>ETH Address: {ethWallet?.address}</Text>}
+          {<Text>BTC Address: {btcWallet?.address}</Text>}
+        </View>
+
+        <View className="flex-1 px-4 pt-16 ">
+          <Button
+            label="Sign message with ETH"
+            onPress={signMessageWithEth}
+            loading={ethSignatureStatus === 'loading'}
+            disabled={!ethWallet}
+          />
+          {ethSignature && <Text>Signature: {ethSignature}</Text>}
+        </View>
+
+        <View className="flex-1 px-4 pt-16 ">
+          <Button
+            label="Send Bitcoin transaction"
+            onPress={sendBitcoinTransaction}
+            // disabled={!btcWallet}
+            disabled
+          />
+          {btcTxHash && <Text>Tx hash: {btcTxHash}</Text>}
         </View>
       </ScrollView>
     </>

@@ -1,21 +1,20 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+
+import { storageMKKV } from '../../core/storage';
 
 export const supabase = createClient(
   'https://wnpphaccyjobbojjkvat.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InducHBoYWNjeWpvYmJvamprdmF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTIxMDU0MzAsImV4cCI6MjAwNzY4MTQzMH0.zZStzJDj_OGENGRX1a7bx-hjYt6ENdDZJbXlpHSwTDI',
   {
     auth: {
-      storage: AsyncStorage,
-      storageKey: 'supabase.auth.token',
+      storage: storageMKKV,
     },
   }
 );
 
 const PIER_MPC_SERVER_HTTP_URL = 'https://mpc.pierwallet.com';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const api: any = createTRPCProxyClient({
   links: [
     httpBatchLink({

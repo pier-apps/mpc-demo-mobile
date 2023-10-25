@@ -1,10 +1,6 @@
 import 'react-native-url-polyfill/auto';
 import 'react-native-gesture-handler';
 
-import Buffer from '@craftzdog/react-native-buffer';
-
-globalThis.Buffer = Buffer.Buffer;
-
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
