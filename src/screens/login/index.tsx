@@ -1,24 +1,44 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSoftKeyboardEffect } from '@/core/keyboard';
-import { FocusAwareStatusBar, View } from '@/ui';
+import { Button, FocusAwareStatusBar, View } from '@/ui';
 
 import { supabase } from '../mpc/trpc';
 
 export const Login = () => {
   useSoftKeyboardEffect();
 
+  useEffect(() => {
+    (async () => {
+      supabase.auth.signOut();
+    })();
+  }, []);
+
+  const buttonStyle = { width: 220, height: 50, alignSelf: 'center' };
   return (
     <>
       <FocusAwareStatusBar />
       {/* <LoginForm onSubmit={onSubmit} /> */}
       <View className="flex-1 justify-center p-4">
+        <Button
+          label="Sign in as Test"
+          style={buttonStyle}
+          onPress={async () => {
+            const { error } = await supabase.auth.signInWithPassword({
+              email: 'mpc-lib-test@example.com',
+              password: '123456',
+            });
+            if (error) {
+              throw error;
+            }
+          }}
+        />
         <AppleAuthentication.AppleAuthenticationButton
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
           cornerRadius={5}
-          style={{ width: 200, height: 44, alignSelf: 'center' }}
+          style={buttonStyle}
           onPress={async () => {
             try {
               const credential = await AppleAuthentication.signInAsync({
