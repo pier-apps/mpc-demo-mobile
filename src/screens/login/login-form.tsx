@@ -31,7 +31,7 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
     resolver: zodResolver(schema),
   });
   return (
-    <View className="flex-1 justify-center p-4">
+    <View className="justify-center flex-1 p-4">
       <Text testID="form-title" variant="h1" className="pb-6 text-center">
         Sign In
       </Text>

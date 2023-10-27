@@ -23,5 +23,10 @@ export const useKeyStorage = () => {
     setKeyShare(keyShareToSave);
   }, []);
 
-  return { keyShare, saveKeyShare };
+  const clearKeyShare = useCallback(async () => {
+    await keyStorage.setStorage(null);
+    setKeyShare(null);
+  }, []);
+
+  return { keyShare, saveKeyShare, clearKeyShare };
 };

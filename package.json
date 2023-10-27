@@ -41,7 +41,7 @@
     "@ethersproject/shims": "^5.7.0",
     "@gorhom/bottom-sheet": "^4",
     "@hookform/resolvers": "^2.9.11",
-    "@pier-wallet/mpc-lib": "0.3.1-bitcore.0",
+    "@pier-wallet/mpc-lib": "0.3.5",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",

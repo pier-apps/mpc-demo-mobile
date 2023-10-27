@@ -9,13 +9,19 @@ import {
   usePierMpcSdk,
 } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
 import { translate } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
+import { SendEthereumTransaction } from './send-ethereum-transaction';
 import { api, supabase } from './trpc';
 import { useKeyStorage } from './use-key-storage';
+
+const ethereumProvider = new ethers.providers.JsonRpcProvider(
+  'https://eth-sepolia.g.alchemy.com/v2/BQ_nMljcV-AUx1EgSMzjSiFQLAlIUQvR'
+);
 
 export const Mpc = () => {
   return (
@@ -27,7 +33,7 @@ export const Mpc = () => {
 
 const MpcInner = () => {
   const pierMpcSdk = usePierMpcSdk();
-  const { keyShare, saveKeyShare } = useKeyStorage();
+  const { keyShare, saveKeyShare, clearKeyShare } = useKeyStorage();
   const [keyShareSatus, setKeyShareStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
   >('idle');
@@ -47,7 +53,8 @@ const MpcInner = () => {
       const ethWallet = new PierMpcEthereumWallet(
         keyShare,
         signConnection,
-        pierMpcSdk
+        pierMpcSdk,
+        ethereumProvider
       );
       // const btcWallet = new PierMpcBitcoinWallet(
       //   keyShare,
@@ -59,6 +66,12 @@ const MpcInner = () => {
 
       return { ethWallet, btcWallet };
     },
+    refetchInterval: 0,
+    retry: false,
+    refetchIntervalInBackground: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   }).data;
   const { btcWallet, ethWallet } = wallets || {
     btcWallet: null,
@@ -156,17 +169,24 @@ const MpcInner = () => {
           </Text>
 
           <Button
-            label="Generate key share"
+            label="Create wallet"
             onPress={generateKeyShare}
             loading={keyShareSatus === 'loading'}
             disabled={
-              keyShareSatus === 'loading' || keyShareSatus === 'success'
+              keyShareSatus === 'loading' ||
+              keyShareSatus === 'success' ||
+              !!keyShare
             }
           />
+          <Button
+            label="Delete wallet"
+            variant="secondary"
+            onPress={clearKeyShare}
+            loading={keyShareSatus === 'loading'}
+            disabled={!keyShare}
+          />
           {<Text>ETH Address: {ethWallet?.address}</Text>}
-          {<Text>BTC Address: {btcWallet?.address}</Text>}
         </View>
-
         <View className="flex-1 px-4 pt-16 ">
           <Button
             label="Sign message with ETH"
@@ -176,16 +196,7 @@ const MpcInner = () => {
           />
           {ethSignature && <Text>Signature: {ethSignature}</Text>}
         </View>
-
-        <View className="flex-1 px-4 pt-16 ">
-          <Button
-            label="Send Bitcoin transaction"
-            onPress={sendBitcoinTransaction}
-            // disabled={!btcWallet}
-            disabled
-          />
-          {btcTxHash && <Text>Tx hash: {btcTxHash}</Text>}
-        </View>
+        <SendEthereumTransaction wallet={ethWallet} />
       </ScrollView>
     </>
   );

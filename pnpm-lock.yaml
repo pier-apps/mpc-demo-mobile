@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.9.11
     version: 2.9.11(react-hook-form@7.43.5)
   '@pier-wallet/mpc-lib':
-    specifier: 0.3.1-bitcore.0
-    version: 0.3.1-bitcore.0(@supabase/supabase-js@2.38.2)(typescript@5.1.6)
+    specifier: 0.3.5
+    version: 0.3.5(@supabase/supabase-js@2.38.2)(typescript@5.1.6)
   '@react-native-async-storage/async-storage':
     specifier: ^1.19.3
     version: 1.19.3(react-native@0.72.5)
@@ -3578,20 +3578,18 @@ packages:
       rimraf: 3.0.2
     dev: false
 
-  /@pier-wallet/mpc-ecdsa-wasm@0.1.6:
-    resolution: {integrity: sha512-xLEbAElSBygxFeQaxTn+8DQNvtZfQy9htyg3RDBeGbL3CAWAjnYKOheYaMPgINMQS7d8Hlo3AdILW6tHg3iSeg==}
+  /@pier-wallet/mpc-ecdsa-wasm@0.2.0:
+    resolution: {integrity: sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==}
     dev: false
 
-  /@pier-wallet/mpc-lib@0.3.1-bitcore.0(@supabase/supabase-js@2.38.2)(typescript@5.1.6):
-    resolution: {integrity: sha512-ut7oZbd8QyZBQO/j0H0oGBDe+mNuE/I40oqAXsGxScnH1ajoN27ywzg07Rfzad/bXUqLJw5ehPKDdjw0/g/06Q==}
+  /@pier-wallet/mpc-lib@0.3.5(@supabase/supabase-js@2.38.2)(typescript@5.1.6):
+    resolution: {integrity: sha512-xtgeGyUinZ5Iah8p0FKf65ARKQuVvtmEWtWQCuPl59s7oRxmRxpJ32gE545Q47Kamv8btcmNKbZnVUi2Z6KmKA==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.0
     dependencies:
-      '@pier-wallet/mpc-ecdsa-wasm': 0.1.6
+      '@pier-wallet/mpc-ecdsa-wasm': 0.2.0
       '@supabase/supabase-js': 2.38.2
-      assert: 2.1.0
       bitcore-lib: 10.0.11
-      buffer: 6.0.3
       elliptic: 6.5.4
       ethers: 5.7.2
       events: 3.3.0
@@ -5391,13 +5389,6 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-
-  /buffer@6.0.3:
-    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
-    dependencies:
-      base64-js: 1.5.1
-      ieee754: 1.2.1
-    dev: false
 
   /bufferutil@4.0.8:
     resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}

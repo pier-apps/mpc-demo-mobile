@@ -12,7 +12,7 @@ export class KeyStorage {
   ) {}
 
   // TODO: Think about multiple storage keys for same device
-  async setStorage(value: KeyShare) {
+  async setStorage(value: KeyShare | null) {
     await this.storage.setItem(this.storageKey, JSON.stringify(value));
   }
   async getStorage() {
