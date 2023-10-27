@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 import { translate } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
+import { SendBitcoinTransaction } from './send-bitcoin-transaction';
 import { SendEthereumTransaction } from './send-ethereum-transaction';
 import { api, supabase } from './trpc';
 import { useKeyStorage } from './use-key-storage';
@@ -181,6 +182,7 @@ const MpcInner = () => {
           )}
 
           <Text variant="sm">ETH Address: {ethWallet?.address}</Text>
+          <Text variant="sm">BTC Address: {btcWallet?.address}</Text>
           <Button
             label="Copy ETH address"
             onPress={async () =>
@@ -188,6 +190,13 @@ const MpcInner = () => {
             }
             loading={ethSignatureStatus === 'loading'}
             disabled={!ethWallet}
+          />
+          <Button
+            label="Copy BTC address"
+            onPress={async () =>
+              await Clipboard.setStringAsync(btcWallet?.address || '')
+            }
+            disabled={!btcWallet}
           />
         </View>
         <View className="flex-1 px-4 pt-16 ">
@@ -200,6 +209,7 @@ const MpcInner = () => {
           {ethSignature && <Text>Signature: {ethSignature}</Text>}
         </View>
         <SendEthereumTransaction wallet={ethWallet} />
+        <SendBitcoinTransaction btcWallet={btcWallet} />
         {!!keyShare && (
           <Button
             label="Delete wallet"

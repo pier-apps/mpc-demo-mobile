@@ -10,9 +10,9 @@ module.exports = function (api) {
           alias: {
             '@': './src',
             '@env': './src/core/env.js',
-            // crypto: 'react-native-quick-crypto',
-            // stream: 'stream-browserify',
-            // buffer: '@craftzdog/react-native-buffer',
+            crypto: 'react-native-quick-crypto',
+            stream: 'stream-browserify',
+            buffer: '@craftzdog/react-native-buffer',
           },
           extensions: [
             '.ios.ts',
