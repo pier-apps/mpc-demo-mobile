@@ -90,7 +90,7 @@ export function SendEthereumTransaction({
           ? `Error: ${(balance.error as any).message}`
           : balance.data}
       </Text>
-      <View className="flex-1 justify-center p-4">
+      <View className="justify-center flex-1 p-4">
         <ControlledInput
           control={control}
           name="receiver"
@@ -105,8 +105,8 @@ export function SendEthereumTransaction({
         />
 
         <Button
-          testID="login-button"
-          label="Login"
+          testID="send-eth-button"
+          label="Send ETH"
           onPress={handleSubmit(onSubmit)}
           variant="primary"
           disabled={balance.isLoading || balance.isError || !wallet}

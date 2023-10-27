@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.9.11
     version: 2.9.11(react-hook-form@7.43.5)
   '@pier-wallet/mpc-lib':
-    specifier: 0.3.5
-    version: 0.3.5(@supabase/supabase-js@2.38.2)(typescript@5.1.6)
+    specifier: 0.4.0-alpha.2
+    version: 0.4.0-alpha.2(@supabase/supabase-js@2.38.2)(typescript@5.1.6)
   '@react-native-async-storage/async-storage':
     specifier: ^1.19.3
     version: 1.19.3(react-native@0.72.5)
@@ -65,6 +65,9 @@ dependencies:
   expo-build-properties:
     specifier: ~0.8.3
     version: 0.8.3(expo@49.0.13)
+  expo-clipboard:
+    specifier: ~4.3.1
+    version: 4.3.1(expo@49.0.13)
   expo-constants:
     specifier: ~14.4.2
     version: 14.4.2(expo@49.0.13)
@@ -3578,18 +3581,34 @@ packages:
       rimraf: 3.0.2
     dev: false
 
+  /@pier-wallet/bitcore-lib@11.0.0-alpha.3:
+    resolution: {integrity: sha512-PG35ITHnWduN3H6fQ1ecKTjlEkmMubuDilxb5NTQXh+t5GgoltcHOfdFIWJXFm3QFk62JkjMb+O/38n2BlVn2w==}
+    dependencies:
+      assert: 2.1.0
+      bech32: 2.0.0
+      bip-schnorr: 0.6.4
+      bn.js: 4.11.8
+      bs58: 4.0.1
+      buffer: 6.0.3
+      buffer-compare: 1.1.1
+      elliptic: 6.5.4
+      hash.js: 1.1.7
+      inherits: 2.0.1
+      lodash: 4.17.21
+    dev: false
+
   /@pier-wallet/mpc-ecdsa-wasm@0.2.0:
     resolution: {integrity: sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==}
     dev: false
 
-  /@pier-wallet/mpc-lib@0.3.5(@supabase/supabase-js@2.38.2)(typescript@5.1.6):
-    resolution: {integrity: sha512-xtgeGyUinZ5Iah8p0FKf65ARKQuVvtmEWtWQCuPl59s7oRxmRxpJ32gE545Q47Kamv8btcmNKbZnVUi2Z6KmKA==}
+  /@pier-wallet/mpc-lib@0.4.0-alpha.2(@supabase/supabase-js@2.38.2)(typescript@5.1.6):
+    resolution: {integrity: sha512-TJxRwAdHutXyJwv4y6KzQuhbpGYBV0aWKaGmVkyYmux0aQmM4m8wTHpRHlINkARjvplZfJpNE9yKW7iJ3isNWQ==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.0
     dependencies:
+      '@pier-wallet/bitcore-lib': 11.0.0-alpha.3
       '@pier-wallet/mpc-ecdsa-wasm': 0.2.0
       '@supabase/supabase-js': 2.38.2
-      bitcore-lib: 10.0.11
       elliptic: 6.5.4
       ethers: 5.7.2
       events: 3.3.0
@@ -5202,19 +5221,6 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /bitcore-lib@10.0.11:
-    resolution: {integrity: sha512-/gAKABXdQrOBuM4aOZBHtpHNcWrIrf6CPYYcMIPsj7FHhkEfLggWnAY0vc7bHnmIStVpiKVe7LpLtX8frirMRA==}
-    dependencies:
-      bech32: 2.0.0
-      bip-schnorr: 0.6.4
-      bn.js: 4.11.8
-      bs58: 4.0.1
-      buffer-compare: 1.1.1
-      elliptic: 6.5.4
-      inherits: 2.0.1
-      lodash: 4.17.21
-    dev: false
-
   /bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
     dependencies:
@@ -5389,6 +5395,13 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
+
+  /buffer@6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
 
   /bufferutil@4.0.8:
     resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
@@ -7139,6 +7152,14 @@ packages:
       ajv: 8.11.0
       expo: 49.0.13(@babel/core@7.21.0)
       semver: 7.5.4
+    dev: false
+
+  /expo-clipboard@4.3.1(expo@49.0.13):
+    resolution: {integrity: sha512-WIsjvAsr2+/NZRa84mKxjui1EdPpdKbQIC2LN/KMBNuT7g4GQYL3oo9WO9G/C7doKQ7f7pnfdvO3N6fUnoRoJw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.13(@babel/core@7.21.0)
     dev: false
 
   /expo-constants@14.4.2(expo@49.0.13):

@@ -3,6 +3,7 @@ import 'react-native-get-random-values';
 import '@ethersproject/shims';
 
 import { SessionKind } from '@pier-wallet/mpc-lib';
+import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
 import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
 import {
   PierMpcSdkReactNativeProvider,
@@ -10,6 +11,7 @@ import {
 } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
+import * as Clipboard from 'expo-clipboard';
 import React, { useState } from 'react';
 
 import { translate } from '@/core';
@@ -56,13 +58,12 @@ const MpcInner = () => {
         pierMpcSdk,
         ethereumProvider
       );
-      // const btcWallet = new PierMpcBitcoinWallet(
-      //   keyShare,
-      //   'testnet',
-      //   signConnection,
-      //   pierMpcSdk
-      // );
-      const btcWallet = null as any;
+      const btcWallet = new PierMpcBitcoinWallet(
+        keyShare,
+        'testnet',
+        signConnection,
+        pierMpcSdk
+      );
 
       return { ethWallet, btcWallet };
     },
@@ -168,24 +169,26 @@ const MpcInner = () => {
             {translate('mpc.title')}
           </Text>
 
+          {!keyShare && (
+            <Button
+              label="Create wallet"
+              onPress={generateKeyShare}
+              loading={keyShareSatus === 'loading'}
+              disabled={
+                keyShareSatus === 'loading' || keyShareSatus === 'success'
+              }
+            />
+          )}
+
+          <Text variant="sm">ETH Address: {ethWallet?.address}</Text>
           <Button
-            label="Create wallet"
-            onPress={generateKeyShare}
-            loading={keyShareSatus === 'loading'}
-            disabled={
-              keyShareSatus === 'loading' ||
-              keyShareSatus === 'success' ||
-              !!keyShare
+            label="Copy ETH address"
+            onPress={async () =>
+              await Clipboard.setStringAsync(ethWallet?.address || '')
             }
+            loading={ethSignatureStatus === 'loading'}
+            disabled={!ethWallet}
           />
-          <Button
-            label="Delete wallet"
-            variant="secondary"
-            onPress={clearKeyShare}
-            loading={keyShareSatus === 'loading'}
-            disabled={!keyShare}
-          />
-          {<Text>ETH Address: {ethWallet?.address}</Text>}
         </View>
         <View className="flex-1 px-4 pt-16 ">
           <Button
@@ -197,6 +200,15 @@ const MpcInner = () => {
           {ethSignature && <Text>Signature: {ethSignature}</Text>}
         </View>
         <SendEthereumTransaction wallet={ethWallet} />
+        {!!keyShare && (
+          <Button
+            label="Delete wallet"
+            variant="secondary"
+            onPress={clearKeyShare}
+            loading={keyShareSatus === 'loading'}
+            disabled={!keyShare}
+          />
+        )}
       </ScrollView>
     </>
   );
