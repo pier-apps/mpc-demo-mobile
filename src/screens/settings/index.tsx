@@ -2,19 +2,21 @@ import { Env } from '@env';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 
-import { useAuth } from '@/core';
 import { translate } from '@/core';
 import { FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 import { Github, Rate, Share, Support, Website } from '@/ui/icons';
 import colors from '@/ui/theme/colors';
 
+import { supabase } from '../mpc/trpc';
 import { Item } from './item';
 import { ItemsContainer } from './items-container';
 import { LanguageItem } from './language-item';
 import { ThemeItem } from './theme-item';
 
 export const Settings = () => {
-  const signOut = useAuth.use.signOut();
+  // const signOut = useAuth.use.signOut();
+  const signOut = async () => await supabase.auth.signOut();
+
   const { colorScheme } = useColorScheme();
   const iconColor =
     colorScheme === 'dark' ? colors.neutral[400] : colors.neutral[500];

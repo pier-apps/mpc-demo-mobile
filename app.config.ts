@@ -8,7 +8,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: Env.NAME,
   description: `${Env.NAME} Mobile App`,
   owner: Env.EXPO_ACCOUNT_OWNER,
-  slug: 'obytesapp',
+  slug: 'piermpcdemo',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -40,6 +40,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     ['@bacons/link-assets', ['./assets/fonts/Inter.ttf']],
     'expo-localization',
+    'expo-apple-authentication',
+    [
+      'expo-local-authentication',
+      {
+        faceIDPermission: 'Allow piermpcdemo to use Face ID.',
+      },
+    ],
     [
       'expo-build-properties',
       {
