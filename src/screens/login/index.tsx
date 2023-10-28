@@ -20,9 +20,9 @@ export const Login = () => {
     <>
       <FocusAwareStatusBar />
       {/* <LoginForm onSubmit={onSubmit} /> */}
-      <View className="flex-1 justify-center p-4">
+      <View className="justify-center flex-1 p-4">
         <Button
-          label="Sign in as Test"
+          label="Sign in as Test (fix)"
           style={buttonStyle}
           onPress={async () => {
             const { error } = await supabase.auth.signInWithPassword({
