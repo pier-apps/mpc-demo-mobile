@@ -34,7 +34,7 @@ const schema = z.object({
       return satoshis;
     })
     .refine(
-      (s) => s >= ethers.utils.parseUnits(minBtc, BTC_DECIMALS),
+      (s) => s >= ethers.utils.parseUnits(minBtc, BTC_DECIMALS).toBigInt(),
       `Amount must be greater than ${minBtc}`
     ),
 });
@@ -52,8 +52,8 @@ export function SendBitcoinTransaction({
       if (!btcWallet) {
         return '';
       }
-      const balance = await btcWallet.getBalance();
-      return `${ethers.utils.formatUnits(balance, BTC_DECIMALS)} BTC`;
+      const b = await btcWallet.getBalance();
+      return `${ethers.utils.formatUnits(b, BTC_DECIMALS)} BTC`;
     },
   });
   const [sendBtcResult, setSendBtcResult] = useState('');

@@ -44,7 +44,6 @@ const MpcInner = () => {
     'idle' | 'loading' | 'success' | 'error'
   >('idle');
   const [ethSignature, setEthSignature] = useState<string | null>(null);
-  const [btcTxHash, setBtcTxHash] = useState<string | null>(null);
 
   const wallets = useQuery({
     queryKey: ['keyShare', keyShare?.publicKey],
@@ -134,33 +133,6 @@ const MpcInner = () => {
     setEthSignatureStatus('success');
   };
 
-  const sendBitcoinTransaction = async () => {
-    const faucetAddress = 'tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6';
-
-    if (!btcWallet) {
-      console.error('wallet not generated');
-      return;
-    }
-    const tx = await btcWallet.createTransaction({
-      to: faucetAddress,
-      value: 800n,
-      feePerByte: 1n,
-    });
-    api.bitcoin.sendTransaction
-      .mutate({
-        sessionId: btcWallet.connection.sessionId,
-        publicKey: btcWallet.keyShare.publicKey,
-        transaction: tx.toObject(),
-      })
-      .then((res: unknown) =>
-        console.log(
-          `server finished sending transaction: "${JSON.stringify(res)}"`
-        )
-      );
-    const hash = await btcWallet.sendTransaction(tx);
-    setBtcTxHash(hash);
-    console.log('btc hash', hash);
-  };
   return (
     <>
       <FocusAwareStatusBar />

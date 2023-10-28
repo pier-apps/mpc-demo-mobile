@@ -1,4 +1,4 @@
-import type { KeyShare } from '@pier-wallet/mpc-lib';
+import { KeyShare } from '@pier-wallet/mpc-lib';
 import type { AsyncOrSync } from 'ts-essentials';
 
 // Storage class with setStorage and getStorage
@@ -13,16 +13,16 @@ export class KeyStorage {
 
   // TODO: Think about multiple storage keys for same device
   async setStorage(value: KeyShare | null) {
-    await this.storage.setItem(this.storageKey, JSON.stringify(value));
+    await this.storage.setItem(this.storageKey, JSON.stringify(value?.raw()));
   }
-  async getStorage() {
+  async getStorage(): Promise<KeyShare | null> {
     const value = await this.storage.getItem(this.storageKey);
-    if (typeof value !== 'string') return undefined;
+    if (typeof value !== 'string') return null;
     try {
-      return JSON.parse(value);
+      return new KeyShare(JSON.parse(value));
     } catch (e) {
       console.error(e);
-      return undefined;
+      return null;
     }
   }
 }

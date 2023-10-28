@@ -21,8 +21,8 @@ dependencies:
     specifier: ^2.9.11
     version: 2.9.11(react-hook-form@7.43.5)
   '@pier-wallet/mpc-lib':
-    specifier: 0.4.0-alpha.3
-    version: 0.4.0-alpha.3(@supabase/supabase-js@2.38.2)(typescript@5.1.6)
+    specifier: 0.5.3
+    version: 0.5.3(@supabase/supabase-js@2.38.2)(typescript@5.1.6)
   '@react-native-async-storage/async-storage':
     specifier: ^1.19.3
     version: 1.19.3(react-native@0.72.5)
@@ -3603,8 +3603,8 @@ packages:
       rimraf: 3.0.2
     dev: false
 
-  /@pier-wallet/bitcore-lib@11.0.0-alpha.7:
-    resolution: {integrity: sha512-yXDxfMpdsx4Ab8vSaNTnZfd3HWE619btkMSDT6uqe9yD5TLQeUAhzo5HAzrrhL8R7D18fs8u7aKQVZgpiaHI2g==}
+  /@pier-wallet/bitcore-lib@11.0.0-alpha.8:
+    resolution: {integrity: sha512-DtorriPyZ41qpMapeImrFxih2p6zqL5ubjQIImZWqXlN4g6so6qV2PV6en7HnsGXnv0gWh5/TQY4T3LdbMMnuA==}
     dependencies:
       assert: 2.1.0
       bech32: 2.0.0
@@ -3625,12 +3625,12 @@ packages:
     resolution: {integrity: sha512-uo1NCMjdAc1xksXYjdO7JIkGdhdyPLzcpWbK94vwYgq8iIA/uXIiewi+IC+z3nELCXTR4vTsdt+dM6O/wSmXHw==}
     dev: false
 
-  /@pier-wallet/mpc-lib@0.4.0-alpha.3(@supabase/supabase-js@2.38.2)(typescript@5.1.6):
-    resolution: {integrity: sha512-c0m5Zbs58Z0f4PrTgTWf6xQp98qnFiyMIgMvIYlIJY3Hpt1+2l6jU05ef6hWuhumdYaZnY516U6toADqEWCKHA==}
+  /@pier-wallet/mpc-lib@0.5.3(@supabase/supabase-js@2.38.2)(typescript@5.1.6):
+    resolution: {integrity: sha512-cQugkH4ti930oXZnDiXvcYEpZLUStgDQ/RGD2t4YooZtyiE+o0KI4pJVUQ3rywQ+HHEXMZqJQHEmquP3GZmlkA==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.0
     dependencies:
-      '@pier-wallet/bitcore-lib': 11.0.0-alpha.7
+      '@pier-wallet/bitcore-lib': 11.0.0-alpha.8
       '@pier-wallet/mpc-ecdsa-wasm': 0.2.0
       '@supabase/supabase-js': 2.38.2
       elliptic: 6.5.4
