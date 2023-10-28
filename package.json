@@ -94,6 +94,7 @@
     "react-native-webview": "^13.6.0",
     "react-query-kit": "^1.4.6",
     "stream-browserify": "^3.0.0",
+    "superjson": "^2.2.0",
     "ts-essentials": "^9.4.1",
     "zod": "^3.22.3",
     "zustand": "^4.3.6"

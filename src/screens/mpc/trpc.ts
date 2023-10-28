@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import { SuperJSON } from 'superjson';
 
 import { storageMKKV } from '../../core/storage';
 
@@ -16,6 +17,7 @@ export const supabase = createClient(
 const PIER_MPC_SERVER_HTTP_URL = 'https://mpc.pierwallet.com';
 
 export const api: any = createTRPCProxyClient({
+  transformer: new SuperJSON(),
   links: [
     httpBatchLink({
       url: `${PIER_MPC_SERVER_HTTP_URL}/trpc`,
