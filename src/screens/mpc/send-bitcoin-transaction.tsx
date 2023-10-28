@@ -39,8 +39,6 @@ const schema = z.object({
     ),
 });
 
-type FormType = z.infer<typeof schema>;
-
 export function SendBitcoinTransaction({
   btcWallet,
 }: {
@@ -58,11 +56,16 @@ export function SendBitcoinTransaction({
   });
   const [sendBtcResult, setSendBtcResult] = useState('');
 
-  const { handleSubmit, control } = useForm<FormType>({
+  const { handleSubmit, control } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      receiver: 'tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6',
+      amount: '0.000008',
+    },
   });
 
-  const onSubmit = async (data: FormType) => {
+  const onSubmit = async (d: z.input<typeof schema>) => {
+    const data = d as unknown as z.output<typeof schema>; // we need to lie to TS because react-hook-form doesn't understand input/output types
     if (!btcWallet) {
       console.error('no btc wallet');
       return;
@@ -107,7 +110,6 @@ export function SendBitcoinTransaction({
           control={control}
           name="receiver"
           label="Receiver address"
-          defaultValue="tb1qw2c3lxufxqe2x9s4rdzh65tpf4d7fssjgh8nv6"
         />
 
         <ControlledInput
@@ -115,7 +117,6 @@ export function SendBitcoinTransaction({
           name="amount"
           label="Amount (BTC)"
           placeholder="0.1"
-          defaultValue="0.000008"
         />
 
         <Button
