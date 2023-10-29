@@ -1,6 +1,6 @@
 {
   "name": "piermpcdemo",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
     "start": "cross-env EXPO_NO_DOTENV=1 expo start",
@@ -78,6 +78,7 @@
     "react-i18next": "^12.2.0",
     "react-native": "0.72.5",
     "react-native-avoid-softinput": "^4.0.1",
+    "react-native-cloud-store": "^0.11.0",
     "react-native-flash-message": "^0.4.0",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-get-random-values": "^1.9.0",
