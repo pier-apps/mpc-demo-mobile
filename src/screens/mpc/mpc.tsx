@@ -35,6 +35,7 @@ export const Mpc = () => {
 };
 
 const MpcInner = () => {
+  // MPC below
   const pierMpcSdk = usePierMpcSdk();
   const { keyShare, saveKeyShare, clearKeyShare } = useKeyStorage();
   const [keyShareSatus, setKeyShareStatus] = useState<

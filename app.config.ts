@@ -42,6 +42,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-localization',
     'expo-apple-authentication',
     [
+      'react-native-cloud-store',
+      {
+        iCloud: {
+          kv: {
+            enabled: true,
+          },
+          documents: [
+            {
+              containerId: `iCloud.com.piermpcdemo.development`,
+              enabled: true,
+              visible: true,
+              visibleName: `pier mpc demo development`,
+            },
+          ],
+        },
+      },
+    ],
+    [
       'expo-local-authentication',
       {
         faceIDPermission: 'Allow piermpcdemo to use Face ID.',

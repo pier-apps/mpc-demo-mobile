@@ -21,7 +21,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.0.4</string>
+    <string>0.0.5</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -58,6 +58,18 @@
     </dict>
     <key>NSFaceIDUsageDescription</key>
     <string>Allow piermpcdemo to use Face ID.</string>
+    <key>NSUbiquitousContainers</key>
+    <dict>
+      <key>iCloud.com.piermpcdemo.development</key>
+      <dict>
+        <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+        <true/>
+        <key>NSUbiquitousContainerName</key>
+        <string>pier mpc demo development</string>
+        <key>NSUbiquitousContainerSupportedFolderLevels</key>
+        <string>Any</string>
+      </dict>
+    </dict>
     <key>UIAppFonts</key>
     <array>
       <string>Inter.ttf</string>
