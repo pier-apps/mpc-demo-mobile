@@ -5,10 +5,7 @@ import '@ethersproject/shims';
 import { SessionKind } from '@pier-wallet/mpc-lib';
 import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
 import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
-import {
-  PierMpcSdkReactNativeProvider,
-  usePierMpcSdk,
-} from '@pier-wallet/mpc-lib/dist/package/react-native';
+import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import * as Clipboard from 'expo-clipboard';
@@ -19,7 +16,6 @@ import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
 import { SendBitcoinTransaction } from './send-bitcoin-transaction';
 import { SendEthereumTransaction } from './send-ethereum-transaction';
-import { api, supabase } from './trpc';
 import { useKeyStorage } from './use-key-storage';
 
 const ethereumProvider = new ethers.providers.JsonRpcProvider(
@@ -27,14 +23,6 @@ const ethereumProvider = new ethers.providers.JsonRpcProvider(
 );
 
 export const Mpc = () => {
-  return (
-    <PierMpcSdkReactNativeProvider supabase={supabase}>
-      <MpcInner />
-    </PierMpcSdkReactNativeProvider>
-  );
-};
-
-const MpcInner = () => {
   // MPC below
   const pierMpcSdk = usePierMpcSdk();
   const { keyShare, saveKeyShare, clearKeyShare } = useKeyStorage();
@@ -81,9 +69,10 @@ const MpcInner = () => {
   };
 
   async function establishConnection<T extends SessionKind>(sessionKind: T) {
-    const { sessionId } = await api.createSession.mutate({
-      sessionKind,
-    });
+    const { sessionId } =
+      await pierMpcSdk.mpcServerVault.trpc.createSession.mutate({
+        sessionKind,
+      });
     const transport = await pierMpcSdk.establishConnection(sessionKind, {
       type: 'join',
       sessionId,
@@ -95,7 +84,7 @@ const MpcInner = () => {
     setKeyShareStatus('loading');
     try {
       const connection = await establishConnection(SessionKind.KEYGEN);
-      api.generateKeyShare
+      pierMpcSdk.mpcServerVault.trpc.generateKeyShare
         .mutate({
           sessionId: connection.sessionId,
         })
@@ -121,7 +110,7 @@ const MpcInner = () => {
     }
     setEthSignatureStatus('loading');
     const message = 'hello world';
-    api.signMessage
+    pierMpcSdk.mpcServerVault.trpc.ethereum.signMessage
       .mutate({
         publicKey: ethWallet.keyShare.publicKey,
         message,

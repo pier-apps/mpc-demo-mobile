@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
+import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import _ from 'lodash';
@@ -10,8 +11,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, ControlledInput, Text, View } from '@/ui';
-
-import { api } from './trpc';
 
 const schema = z.object({
   receiver: zAddress(),
@@ -29,6 +28,7 @@ export function SendEthereumTransaction({
 }: {
   wallet: PierMpcEthereumWallet | null;
 }) {
+  const pierMpcSdk = usePierMpcSdk();
   const balance = useQuery({
     queryKey: ['ethereum', 'balance', wallet?.address.toLowerCase()],
     queryFn: async () => {
@@ -61,7 +61,7 @@ export function SendEthereumTransaction({
         value: weiAmount,
       });
       const [serverResult, tx] = await Promise.all([
-        api.ethereum.signTransaction.mutate({
+        pierMpcSdk.mpcServerVault.trpc.ethereum.signTransaction.mutate({
           sessionId: wallet.connection.sessionId,
           publicKey: wallet.publicKey,
           transaction: _.mapValues(txRequest, (v) =>
@@ -90,7 +90,7 @@ export function SendEthereumTransaction({
           ? `Error: ${(balance.error as any).message}`
           : balance.data}
       </Text>
-      <View className="justify-center flex-1 p-4">
+      <View className="flex-1 justify-center p-4">
         <ControlledInput
           control={control}
           name="receiver"

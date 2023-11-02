@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
+import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import React from 'react';
@@ -9,8 +10,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, ControlledInput, Text, View } from '@/ui';
-
-import { api } from './trpc';
 
 const BTC_DECIMALS = 8;
 
@@ -44,6 +43,7 @@ export function SendBitcoinTransaction({
 }: {
   btcWallet: PierMpcBitcoinWallet | null;
 }) {
+  const pierMpcSdk = usePierMpcSdk();
   const balance = useQuery({
     queryKey: ['bitcoin', 'balance', btcWallet?.address],
     queryFn: async () => {
@@ -79,7 +79,7 @@ export function SendBitcoinTransaction({
         feePerByte: 1n,
       });
       const [serverResult, hash] = await Promise.all([
-        api.bitcoin.sendTransaction.mutate({
+        pierMpcSdk.mpcServerVault.trpc.bitcoin.sendTransaction.mutate({
           sessionId: btcWallet.connection.sessionId,
           publicKey: btcWallet.publicKey,
           transaction: tx.toObject(),
