@@ -3,12 +3,11 @@ import 'react-native-get-random-values';
 import '@ethersproject/shims';
 
 import { SessionKind } from '@pier-wallet/mpc-lib';
-import { PierMpcBitcoinWallet } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
-import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
 import {
-  PierMpcSdkReactNativeProvider,
-  usePierMpcSdk,
-} from '@pier-wallet/mpc-lib/dist/package/react-native';
+  PierMpcBitcoinWallet,
+  PierMpcBitcoinWalletNetwork,
+} from '@pier-wallet/mpc-lib/dist/package/bitcoin';
+import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import * as Clipboard from 'expo-clipboard';
@@ -17,26 +16,19 @@ import React, { useState } from 'react';
 import { translate } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
+import { usePierServerVault } from './pier-mpc-provider';
 import { SendBitcoinTransaction } from './send-bitcoin-transaction';
 import { SendEthereumTransaction } from './send-ethereum-transaction';
-import { api, supabase } from './trpc';
 import { useKeyStorage } from './use-key-storage';
 
-const ethereumProvider = new ethers.providers.JsonRpcProvider(
+const ethereumProvider = new ethers.providers.StaticJsonRpcProvider(
   'https://eth-sepolia.g.alchemy.com/v2/BQ_nMljcV-AUx1EgSMzjSiFQLAlIUQvR'
 );
 
 export const Mpc = () => {
-  return (
-    <PierMpcSdkReactNativeProvider supabase={supabase}>
-      <MpcInner />
-    </PierMpcSdkReactNativeProvider>
-  );
-};
-
-const MpcInner = () => {
   // MPC below
-  const pierMpcSdk = usePierMpcSdk();
+
+  const pierMpcVaultSdk = usePierServerVault();
   const { keyShare, saveKeyShare, clearKeyShare } = useKeyStorage();
   const [keyShareSatus, setKeyShareStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
@@ -52,18 +44,20 @@ const MpcInner = () => {
       if (!keyShare) {
         return null;
       }
-      const signConnection = await establishConnection(SessionKind.SIGN);
+      const signConnection = await pierMpcVaultSdk.establishConnection(
+        SessionKind.SIGN
+      );
       const ethWallet = new PierMpcEthereumWallet(
         keyShare,
         signConnection,
-        pierMpcSdk,
+        pierMpcVaultSdk,
         ethereumProvider
       );
       const btcWallet = new PierMpcBitcoinWallet(
         keyShare,
-        'testnet',
+        PierMpcBitcoinWalletNetwork.Testnet,
         signConnection,
-        pierMpcSdk
+        pierMpcVaultSdk
       );
 
       return { ethWallet, btcWallet };
@@ -80,31 +74,10 @@ const MpcInner = () => {
     ethWallet: null,
   };
 
-  async function establishConnection<T extends SessionKind>(sessionKind: T) {
-    const { sessionId } = await api.createSession.mutate({
-      sessionKind,
-    });
-    const transport = await pierMpcSdk.establishConnection(sessionKind, {
-      type: 'join',
-      sessionId,
-    });
-    return transport;
-  }
-
   const generateKeyShare = async () => {
     setKeyShareStatus('loading');
     try {
-      const connection = await establishConnection(SessionKind.KEYGEN);
-      api.generateKeyShare
-        .mutate({
-          sessionId: connection.sessionId,
-        })
-        .then((res: unknown) =>
-          console.log(
-            `server finished generating key share: "${JSON.stringify(res)}"`
-          )
-        );
-      const tempKeyShare = await pierMpcSdk.generateKeyShare(connection);
+      const tempKeyShare = await pierMpcVaultSdk.generateKeyShare();
       console.log('local key share generated.', tempKeyShare.publicKey);
       saveKeyShare(tempKeyShare);
       setKeyShareStatus('success');
@@ -121,13 +94,6 @@ const MpcInner = () => {
     }
     setEthSignatureStatus('loading');
     const message = 'hello world';
-    api.signMessage
-      .mutate({
-        publicKey: ethWallet.keyShare.publicKey,
-        message,
-        sessionId: ethWallet.connection.sessionId,
-      })
-      .then(() => console.log('server finished signing message'));
     const signature = await ethWallet.signMessage(message);
     console.log(`local signature generated: ${signature}`);
     setEthSignature(signature);
@@ -181,7 +147,7 @@ const MpcInner = () => {
           />
           {ethSignature && <Text>Signature: {ethSignature}</Text>}
         </View>
-        <SendEthereumTransaction wallet={ethWallet} />
+        <SendEthereumTransaction ethWallet={ethWallet} />
         <SendBitcoinTransaction btcWallet={btcWallet} />
         {!!keyShare && (
           <Button

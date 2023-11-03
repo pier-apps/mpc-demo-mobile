@@ -1,4 +1,5 @@
 import { Env } from '@env';
+import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 
@@ -7,7 +8,6 @@ import { FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 import { Github, Rate, Share, Support, Website } from '@/ui/icons';
 import colors from '@/ui/theme/colors';
 
-import { supabase } from '../mpc/trpc';
 import { Item } from './item';
 import { ItemsContainer } from './items-container';
 import { LanguageItem } from './language-item';
@@ -15,7 +15,8 @@ import { ThemeItem } from './theme-item';
 
 export const Settings = () => {
   // const signOut = useAuth.use.signOut();
-  const signOut = async () => await supabase.auth.signOut();
+  const pierMpcSdk = usePierMpcSdk();
+  const signOut = async () => await pierMpcSdk.auth.signOut();
 
   const { colorScheme } = useColorScheme();
   const iconColor =

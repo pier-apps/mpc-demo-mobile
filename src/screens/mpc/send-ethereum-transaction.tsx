@@ -3,15 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import _ from 'lodash';
 import React from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, ControlledInput, Text, View } from '@/ui';
-
-import { api } from './trpc';
 
 const schema = z.object({
   receiver: zAddress(),
@@ -25,17 +22,17 @@ function zAddress() {
 }
 
 export function SendEthereumTransaction({
-  wallet,
+  ethWallet,
 }: {
-  wallet: PierMpcEthereumWallet | null;
+  ethWallet: PierMpcEthereumWallet | null;
 }) {
   const balance = useQuery({
-    queryKey: ['ethereum', 'balance', wallet?.address.toLowerCase()],
+    queryKey: ['ethereum', 'balance', ethWallet?.address.toLowerCase()],
     queryFn: async () => {
-      if (!wallet) {
+      if (!ethWallet) {
         return '';
       }
-      const b = await wallet.getBalance();
+      const b = await ethWallet.getBalance();
       return `${ethers.utils.formatEther(b)} ETH`;
     },
   });
@@ -46,7 +43,7 @@ export function SendEthereumTransaction({
   });
 
   const onSubmit = async (data: FormType) => {
-    if (!wallet) {
+    if (!ethWallet) {
       console.error('no wallet');
       return;
     }
@@ -56,22 +53,13 @@ export function SendEthereumTransaction({
 
     try {
       setSendEthResult('');
-      const txRequest = await wallet.populateTransaction({
+      const txRequest = await ethWallet.populateTransaction({
         to: data.receiver,
         value: weiAmount,
       });
-      const [serverResult, tx] = await Promise.all([
-        api.ethereum.signTransaction.mutate({
-          sessionId: wallet.connection.sessionId,
-          publicKey: wallet.publicKey,
-          transaction: _.mapValues(txRequest, (v) =>
-            ethers.BigNumber.isBigNumber(v) ? v.toString() : v
-          ),
-        }),
-        await wallet.sendTransaction(txRequest),
-      ]);
-      console.log('server finished sending transaction', serverResult);
-      console.log('local transaction hash', tx.hash);
+
+      const tx = await ethWallet.sendTransaction(txRequest);
+
       setSendEthResult(`Transaction hash: ${tx.hash}`);
     } catch (e: any) {
       setSendEthResult(`Error: ${e?.message}`);
@@ -90,7 +78,7 @@ export function SendEthereumTransaction({
           ? `Error: ${(balance.error as any).message}`
           : balance.data}
       </Text>
-      <View className="justify-center flex-1 p-4">
+      <View className="flex-1 justify-center p-4">
         <ControlledInput
           control={control}
           name="receiver"
@@ -109,7 +97,7 @@ export function SendEthereumTransaction({
           label="Send ETH"
           onPress={handleSubmit(onSubmit)}
           variant="primary"
-          disabled={balance.isLoading || balance.isError || !wallet}
+          disabled={balance.isLoading || balance.isError || !ethWallet}
         />
 
         <Text>{sendEthResult}</Text>

@@ -1,44 +1,38 @@
+import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import React, { useEffect } from 'react';
 
 import { useSoftKeyboardEffect } from '@/core/keyboard';
 import { Button, FocusAwareStatusBar, View } from '@/ui';
 
-import { supabase } from '../mpc/trpc';
-
 export const Login = () => {
+  const pierMpcSdk = usePierMpcSdk();
   useSoftKeyboardEffect();
 
   useEffect(() => {
     (async () => {
-      supabase.auth.signOut();
+      pierMpcSdk.auth.signOut();
     })();
-  }, []);
+  }, [pierMpcSdk.auth]);
 
-  const buttonStyle = { width: 220, height: 50, alignSelf: 'center' };
   return (
     <>
       <FocusAwareStatusBar />
       {/* <LoginForm onSubmit={onSubmit} /> */}
-      <View className="justify-center flex-1 p-4">
+      <View className="flex-1 justify-center p-4">
         <Button
           label="Sign in as Test (fix)"
-          style={buttonStyle}
           onPress={async () => {
-            const { error } = await supabase.auth.signInWithPassword({
+            await pierMpcSdk.auth.signInWithPassword({
               email: 'mpc-lib-test@example.com',
               password: '123456',
             });
-            if (error) {
-              throw error;
-            }
           }}
         />
         <AppleAuthentication.AppleAuthenticationButton
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
           cornerRadius={5}
-          style={buttonStyle}
           onPress={async () => {
             try {
               const credential = await AppleAuthentication.signInAsync({
@@ -51,7 +45,7 @@ export const Login = () => {
               // signed in - also sign in with supabase
               if (!credential.identityToken)
                 throw new Error('No identity token');
-              await supabase.auth.signInWithIdToken({
+              await pierMpcSdk.auth.signInWithIdToken({
                 provider: 'apple',
                 token: credential.identityToken,
               });

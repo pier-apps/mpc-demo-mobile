@@ -1,3 +1,4 @@
+import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
@@ -5,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/core';
 import { useIsFirstTime } from '@/core/hooks';
 import { Onboarding } from '@/screens';
-import { supabase } from '@/screens/mpc/trpc';
 
 import { AuthNavigator } from './auth-navigator';
 import { NavigationContainer } from './navigation-container';
@@ -13,7 +13,9 @@ import { TabNavigator } from './tab-navigator';
 const Stack = createNativeStackNavigator();
 
 export const Root = () => {
+  const pierMpcSdk = usePierMpcSdk();
   const status = useAuth.use.status();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [isFirstTime] = useIsFirstTime();
@@ -28,27 +30,29 @@ export const Root = () => {
 
   useEffect(() => {
     (async () => {
-      const session = await supabase.auth.getSession();
+      const session = await pierMpcSdk.auth.getSession();
 
-      if (session.data.session) {
+      if (session) {
         setIsLoggedIn(true);
       }
     })();
-  }, []);
+  }, [pierMpcSdk.auth]);
 
   useEffect(() => {
-    const subscription = supabase.auth.onAuthStateChange((authChangeEvent) => {
-      if (authChangeEvent === 'SIGNED_IN') {
-        setIsLoggedIn(true);
+    const subscription = pierMpcSdk.auth.supabase.auth.onAuthStateChange(
+      (authChangeEvent) => {
+        if (authChangeEvent === 'SIGNED_IN') {
+          setIsLoggedIn(true);
+        }
+        if (authChangeEvent === 'SIGNED_OUT') {
+          setIsLoggedIn(false);
+        }
       }
-      if (authChangeEvent === 'SIGNED_OUT') {
-        setIsLoggedIn(false);
-      }
-    });
+    );
     return () => {
       subscription.data.subscription.unsubscribe();
     };
-  }, []);
+  }, [pierMpcSdk.auth.supabase.auth]);
 
   return (
     <Stack.Navigator
