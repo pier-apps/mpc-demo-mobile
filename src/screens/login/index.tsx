@@ -33,6 +33,7 @@ export const Login = () => {
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
           cornerRadius={5}
+          style={{ width: 220, height: 50, alignSelf: 'center' }}
           onPress={async () => {
             try {
               const credential = await AppleAuthentication.signInAsync({

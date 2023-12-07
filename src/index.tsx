@@ -22,16 +22,16 @@ SplashScreen.preventAutoHideAsync();
 const App = () => {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <BottomSheetModalProvider>
-        <APIProvider>
-          <PierMpcSdkReactNativeProvider>
-            <PierServerVaultProvider>
+      <PierMpcSdkReactNativeProvider>
+        <PierServerVaultProvider>
+          <BottomSheetModalProvider>
+            <APIProvider>
               <RootNavigator />
               <FlashMessage position="top" />
-            </PierServerVaultProvider>
-          </PierMpcSdkReactNativeProvider>
-        </APIProvider>
-      </BottomSheetModalProvider>
+            </APIProvider>
+          </BottomSheetModalProvider>
+        </PierServerVaultProvider>
+      </PierMpcSdkReactNativeProvider>
     </GestureHandlerRootView>
   );
 };
