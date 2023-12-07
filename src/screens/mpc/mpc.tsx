@@ -8,6 +8,7 @@ import {
   PierMpcBitcoinWalletNetwork,
 } from '@pier-wallet/mpc-lib/dist/package/bitcoin';
 import { PierMpcEthereumWallet } from '@pier-wallet/mpc-lib/dist/package/ethers-v5';
+import { usePierMpc } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 import * as Clipboard from 'expo-clipboard';
@@ -16,7 +17,6 @@ import React, { useState } from 'react';
 import { translate } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 
-import { usePierServerVault } from './pier-mpc-provider';
 import { SendBitcoinTransaction } from './send-bitcoin-transaction';
 import { SendEthereumTransaction } from './send-ethereum-transaction';
 import { useKeyStorage } from './use-key-storage';
@@ -28,7 +28,7 @@ const ethereumProvider = new ethers.providers.StaticJsonRpcProvider(
 export const Mpc = () => {
   // MPC below
 
-  const pierMpcVaultSdk = usePierServerVault();
+  const pierMpcVaultSdk = usePierMpc();
   const { keyShare, saveKeyShare, clearKeyShare } = useKeyStorage();
   const [keyShareSatus, setKeyShareStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
@@ -45,7 +45,8 @@ export const Mpc = () => {
         return null;
       }
       const signConnection = await pierMpcVaultSdk.establishConnection(
-        SessionKind.SIGN
+        SessionKind.SIGN,
+        keyShare.partiesParameters
       );
       const ethWallet = new PierMpcEthereumWallet(
         keyShare,

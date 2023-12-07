@@ -1,5 +1,5 @@
 import { Env } from '@env';
-import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
+import { usePierMpc } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 
@@ -15,7 +15,7 @@ import { ThemeItem } from './theme-item';
 
 export const Settings = () => {
   // const signOut = useAuth.use.signOut();
-  const pierMpcSdk = usePierMpcSdk();
+  const pierMpcSdk = usePierMpc();
   const signOut = async () => await pierMpcSdk.auth.signOut();
 
   const { colorScheme } = useColorScheme();

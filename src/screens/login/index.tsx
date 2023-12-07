@@ -1,4 +1,4 @@
-import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
+import { usePierMpc } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import React, { useEffect } from 'react';
 
@@ -6,7 +6,7 @@ import { useSoftKeyboardEffect } from '@/core/keyboard';
 import { Button, FocusAwareStatusBar, View } from '@/ui';
 
 export const Login = () => {
-  const pierMpcSdk = usePierMpcSdk();
+  const pierMpcSdk = usePierMpc();
   useSoftKeyboardEffect();
 
   useEffect(() => {

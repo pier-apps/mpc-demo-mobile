@@ -1,4 +1,4 @@
-import { usePierMpcSdk } from '@pier-wallet/mpc-lib/dist/package/react-native';
+import { usePierMpc } from '@pier-wallet/mpc-lib/dist/package/react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ import { TabNavigator } from './tab-navigator';
 const Stack = createNativeStackNavigator();
 
 export const Root = () => {
-  const pierMpcSdk = usePierMpcSdk();
+  const pierMpcSdk = usePierMpc();
   const status = useAuth.use.status();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
