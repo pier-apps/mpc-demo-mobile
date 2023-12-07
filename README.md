@@ -1,10 +1,12 @@
 <h1 align="center">
   <img alt="logo" src="./assets/icon.png" width="124px" style="border-radius:10px"/><br/>
-Mobile App </h1>
+PIER MPC Demo App </h1>
+
+> This Project implements a 2/2 MPC wallet with Apple sign-in
 
 > This Project is based on [Obytes starter](https://starter.obytes.com)
 
-## 🔗 Requirementsw
+## 🔗 Requirements
 
 ## Requirements
 
