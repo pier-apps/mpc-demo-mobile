@@ -21,8 +21,8 @@ dependencies:
     specifier: ^2.9.11
     version: 2.9.11(react-hook-form@7.43.5)
   '@pier-wallet/mpc-lib':
-    specifier: 0.7.0
-    version: 0.7.0(react-native@0.72.5)(react@18.2.0)(typescript@5.1.6)
+    specifier: 0.7.1
+    version: 0.7.1(react-native@0.72.5)(react@18.2.0)(typescript@5.1.6)
   '@react-native-async-storage/async-storage':
     specifier: ^1.19.3
     version: 1.19.3(react-native@0.72.5)
@@ -3631,8 +3631,8 @@ packages:
     resolution: {integrity: sha512-kjcBMfjpJvWx2uzh9LdVlxFTj4NMAA8dgdIz1DrxrkudJt+Yx2Ish+4+MpLg0Hc300cvpTROdpQVy9bS5j2Y1g==}
     dev: false
 
-  /@pier-wallet/mpc-lib@0.7.0(react-native@0.72.5)(react@18.2.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-4SP6QQhDURU96Q43xxaeRDVHEh0i8rx5hbUZFSd4VLP0hY05YxzKHy+Vr/JM9A5a5BQGYFSixPdrSDanuEVFjw==}
+  /@pier-wallet/mpc-lib@0.7.1(react-native@0.72.5)(react@18.2.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-RaWk0lA65/20Jzqz82cuxe6W9lClrqolMvplrn1OkCkSh2wyjVbVup5QGsNBdVuQoWe295UBKczRk8/B3LRqUw==}
     dependencies:
       '@ethersproject/shims': 5.7.0
       '@pier-wallet/bitcore-lib': 11.0.0-alpha.8
