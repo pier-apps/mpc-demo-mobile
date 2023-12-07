@@ -10,8 +10,6 @@ import { z } from 'zod';
 
 import { Button, ControlledInput, Text, View } from '@/ui';
 
-import { api } from './trpc';
-
 const BTC_DECIMALS = 8;
 
 const minBtc = '0.000008';
@@ -78,16 +76,7 @@ export function SendBitcoinTransaction({
         value: data.amount,
         feePerByte: 1n,
       });
-      const [serverResult, hash] = await Promise.all([
-        api.bitcoin.sendTransaction.mutate({
-          sessionId: btcWallet.connection.sessionId,
-          publicKey: btcWallet.publicKey,
-          transaction: tx.toObject(),
-        }),
-        btcWallet.sendTransaction(tx),
-      ]);
-      console.log(`server finished sending transaction:`, serverResult);
-      console.log('btc hash', hash);
+      const hash = await btcWallet.sendTransaction(tx);
       setSendBtcResult(`Tx hash: ${hash}`);
     } catch (e: any) {
       console.error(e);
